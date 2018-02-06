@@ -1,18 +1,22 @@
 import React, { Component } from 'react';
+import { Button, Input, Select  } from 'antd';
+const Option = Select.Option;
 import logo from './logo.svg';
 import './App.css';
 
 class App extends Component {
+
   render() {
+      const selectBefore = (
+        <Select defaultValue="Http://" style={{ width: 90  }}>
+            <Option value="Http://">Http://</Option>
+          <Option value="Https://">Https://</Option>
+          </Select>
+      );
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+        <Button type="primary">Button</Button>
+        <Input placeholder="Basic usage" />
       </div>
     );
   }

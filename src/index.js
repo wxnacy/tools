@@ -1,8 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
 import registerServiceWorker from './registerServiceWorker';
+import {BrowserRouter, Route, Switch} from 'react-router-dom'
+import asyncComponent from './AsyncComponent';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+const Run = asyncComponent(() => import('./Run'));
+// const Test = asyncComponent(() => import('./Test'));
+
+ReactDOM.render(
+  <BrowserRouter>
+    <Switch>
+        <Route exact strict path="/run" component={Run}/>
+        <Route exact strict path="/run/:id" component={Run}/>
+    </Switch>
+  </BrowserRouter>, document.getElementById('root'));
 registerServiceWorker();

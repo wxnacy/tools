@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="height: 100%">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -19,9 +19,15 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>React App</title>
+    <title>wxnacy 工具</title>
+    <style>
+    body, html, #root {
+      height: 100%;
+    }
+    #root > [data-reactroot] { height: 100% }
+    </style>
   </head>
-  <body>
+  <body >
     <noscript>
       You need to enable JavaScript to run this app.
     </noscript>
