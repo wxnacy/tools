@@ -2,16 +2,20 @@ import React, { PureComponent } from 'react';
 import brace from 'brace';
 import AceEditor from 'react-ace';
 import { fetchPost, fetchGet } from './utils.js'
-import Input from './component/Input'
-import Button from './component/Button'
-import { Tabs } from 'antd';
+// import Input from './component/Input'
+// import Button from './component/Button'
+import { Tabs, Button, Input } from 'antd';
+import { Layout, Menu, Breadcrumb, Icon } from 'antd';
 
 import 'brace/mode/css';
 import 'brace/mode/html';
 import 'brace/mode/javascript';
 import 'brace/theme/monokai';
 
+const { SubMenu } = Menu;
+const { Header, Content, Sider } = Layout;
 const TabPane = Tabs.TabPane;
+
 const defaultHtml = `<!DOCTYPE html>
 <html lang="en">
  <head>
@@ -51,6 +55,7 @@ export default class Run extends PureComponent {
                 jsText: defaultJS,
                 cssText: defaultCss
             })
+            this.run()
         }
     }
 
@@ -164,38 +169,52 @@ export default class Run extends PureComponent {
     render() {
         const {htmlText, cssText, jsText} = this.state
         return (
-            <div>
-                <div style={{ float: "left", width: "15%" }}>
-                    title
-                    <Input placeholder="名称" value={ this.state.name } onChange={ this.onNameChange.bind(this) }/>
-                    description
-                    <Input placeholder="描述" type="textarea" value={this.state.description} onChange={ this.onDescChange.bind(this) }/>
-                </div>
-                <div style={{ float: "left", width: "40%" }}>
-                    <Tabs defaultActiveKey="1" >
-                            <TabPane tab="Tab 1" key="1">
-                            { this.initEditor("html", this.state.htmlText) }
-                            </TabPane>
-                            <TabPane tab="Tab 2" key="2">
-                            { this.initEditor("javascript", this.state.jsText) }
-                            </TabPane>
-                            <TabPane tab="Tab 3" key="3">
-                            { this.initEditor("css", this.state.cssText) }
-                            </TabPane>
-                    </Tabs>
-
-
-                </div>
-                <div style={{ float: "left", width: "40%" }}>
-                    <Button onClick={ this.run.bind(this) } >运行</Button>
-                    <Button onClick={ this.save.bind(this) } >保存</Button>
-                    <div >
-                        <iframe id="preview" frameBorder="no" border="0"
-                            style={{width: "100%", height: "700px"}} ></iframe>
-                    </div>
-                </div>
-
-            </div>
+            <Layout>
+                    <Header className="header">
+                        <div className="logo" />
+                        <Menu
+                            theme="dark"
+                            mode="horizontal"
+                            defaultSelectedKeys={['1']}
+                            style={{ lineHeight: '64px' }}
+                        >
+                            <Menu.Item key="1">在线html</Menu.Item>
+                        </Menu>
+                    </Header>
+                    <Layout>
+                        <Sider width={200} style={{ background: '#fff' }}>
+                            <div>
+                            <span style={{marginBottom: "20px"}}>title</span>
+                            <Input placeholder="名称" value={ this.state.name } onChange={ this.onNameChange.bind(this) }/>
+                            description
+                            <Input placeholder="描述" type="textarea" value={this.state.description} onChange={ this.onDescChange.bind(this) }/>
+                            <Button type="primary" onClick={ this.run.bind(this) } >运行</Button>
+                            <Button type="primary" onClick={ this.save.bind(this) } >保存</Button>
+                            </div>
+                        </Sider>
+                        <Layout style={{ padding: '0 24px 24px' }}>
+                            <Content style={{ background: '#fff', padding: 24, margin: 0, minHeight: 280 }}>
+                                <Tabs defaultActiveKey="1" >
+                                        <TabPane tab="html" key="1">
+                                        { this.initEditor("html", this.state.htmlText) }
+                                        </TabPane>
+                                        <TabPane tab="js" key="2">
+                                        { this.initEditor("javascript", this.state.jsText) }
+                                        </TabPane>
+                                        <TabPane tab="css" key="3">
+                                        { this.initEditor("css", this.state.cssText) }
+                                        </TabPane>
+                                </Tabs>
+                            </Content>
+                        </Layout>
+                        <Layout style={{ padding: '0 24px 24px' }}>
+                            <Content style={{ background: '#fff', padding: 24, margin: 0, minHeight: 280 }}>
+                                <iframe id="preview" frameBorder="no" border="0"
+                                    style={{width: "100%", height: "700px"}} ></iframe>
+                            </Content>
+                        </Layout>
+                    </Layout>
+                </Layout>
         )
     }
 }
