@@ -11,6 +11,7 @@ const Wapi = asyncComponent(() => import('./Wapi'));
 ReactDOM.render(
   <BrowserRouter>
     <Switch>
+        <Route exact strict path="/" component={Run}/>
         <Route exact strict path="/run" component={Run}/>
         <Route exact strict path="/run/:id" component={Run}/>
         <Route exact strict path="/wapi" component={Wapi}/>

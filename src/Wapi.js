@@ -4,29 +4,38 @@ import AceEditor from 'react-ace';
 import { fetchPost, fetchGet } from './utils.js'
 import { Tabs, message, Button, Input } from 'antd';
 import { Spin, Layout, Menu, Breadcrumb, Icon,  Select } from 'antd';
-import Editor from './component/Editor'
-// import './component/Main.css'
+import Header from './component/Header'
 
 import 'brace/mode/json';
 import 'brace/theme/monokai';
-const Option = Select.Option;
 
+const Option = Select.Option;
 const { SubMenu } = Menu;
-const { Header, Content, Sider } = Layout;
+const {  Content, Sider } = Layout;
 const TabPane = Tabs.TabPane;
 const { TextArea  } = Input;
 
+if(typeof(String.prototype.trim) === "undefined")
+{
+    String.prototype.trim = function()
+    {
+        return String(this).replace(/^\s+|\s+$/g, '');
+    };
+}
+
 const HTTP_HEAD = 'https://wxnacy.com'
-export default class Run extends PureComponent {
+export default class Wapi extends PureComponent {
 
     constructor(props) {
         super(props);
         this.state = {
             url: 'https://ipapi.co/json',
+            // url: 'https://tmdapi.gochinatv.com/tmdapi/v1/screen/ad?code=AA7EIV&play_date=2017-09-02',
             method: 'GET',
             params: '',
             result: '',
-            filter: '',
+            responseHeaders: 'Content: application/json\n\rContent: application/json\n',
+            filter: 'status, message',
             loading: false
         }
         this.id = this.props.match.params.id || "";
@@ -46,6 +55,9 @@ export default class Run extends PureComponent {
             method: this.state.method
         }
         fetch(this.state.url, params).then(res => {
+            console.log(res);
+            console.log(res.headers);
+            console.log(JSON.stringify(res.headers, null, 4));
             return res.json()
         }).then(data => {
             console.log(data);
@@ -59,15 +71,28 @@ export default class Run extends PureComponent {
     }
 
     filter() {
-        console.log(this.state.filter);
         let data = this.state.result;
+        if( !data ){
+            message.error('Send request first please')
+            return
+        }
+        if( !data.startsWith('{') ){
+            message.error('The result not a JSON data')
+            return
+        }
+        data = JSON.parse(this.state.result);
         let filter = this.state.filter;
-        console.log(filter.split(','));
         let filters = filter.split(',')
         let result = {}
         for(let v of filters){
+            v = v.trim()
+            console.log(v);
+            if( v.indexOf('.') > -1 ){
+
+            }
             result[v] = data[v]
         }
+        console.log(result);
         this.setState({result: JSON.stringify(result, null, 4)})
     }
 
@@ -166,18 +191,7 @@ export default class Run extends PureComponent {
         }
         return (
             <Layout>
-                <Header className="header">
-                    <div className="logo" />
-                    <Menu
-                        theme="dark"
-                        mode="horizontal"
-                        defaultSelectedKeys={['2']}
-                        style={{ lineHeight: '64px' }}
-                    >
-                        <Menu.Item key="1">在线html</Menu.Item>
-                        <Menu.Item key="2">Wapi</Menu.Item>
-                    </Menu>
-                </Header>
+                <Header defaultSelectedKeys={['wapi']}/>
                 <Content style={{ background: '#fff', padding: 24, margin: 0}}>
                     <Input style={{width: "80%"}} addonBefore={urlBefore}  value={ this.state.url } onChange={ this.onChangeUrl.bind(this) } />
                     <Button style={{marginLeft: 10}} type="primary" onClick={ () => this.send() } >Send</Button>
@@ -208,9 +222,16 @@ export default class Run extends PureComponent {
                         type="primary"
                         onClick={ () => this.filter() } >Filter</Button>
                     </div>
-                    <Spin spinning={this.state.loading}>
-                    { this.initEditor('json', this.state.result, 'result') }
-                    </Spin>
+                    <Tabs defaultActiveKey="body" >
+                        <TabPane tab="Body" key="body">
+                        <Spin spinning={this.state.loading}>
+                        { this.initEditor('json', this.state.result, 'result') }
+                        </Spin>
+                        </TabPane>
+                        <TabPane tab="Headers" key="headers">
+                            <div>{ this.state.responseHeaders }</div>
+                        </TabPane>
+                    </Tabs>
                     </Content>
                     </Layout>
                 </Layout>

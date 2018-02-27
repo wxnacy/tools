@@ -2,18 +2,16 @@ import React, { PureComponent } from 'react';
 import brace from 'brace';
 import AceEditor from 'react-ace';
 import { fetchPost, fetchGet } from './utils.js'
-// import Input from './component/Input'
-// import Button from './component/Button'
 import { Tabs, Button, Input } from 'antd';
-import { Layout, Menu, Breadcrumb, Icon } from 'antd';
+import { Layout, Breadcrumb } from 'antd';
+import Header from './component/Header'
 
 import 'brace/mode/css';
 import 'brace/mode/html';
 import 'brace/mode/javascript';
 import 'brace/theme/monokai';
 
-const { SubMenu } = Menu;
-const { Header, Content, Sider } = Layout;
+const { Content, Sider } = Layout;
 const TabPane = Tabs.TabPane;
 
 const defaultHtml = `<!DOCTYPE html>
@@ -170,17 +168,7 @@ export default class Run extends PureComponent {
         const {htmlText, cssText, jsText} = this.state
         return (
             <Layout>
-                    <Header className="header">
-                        <div className="logo" />
-                        <Menu
-                            theme="dark"
-                            mode="horizontal"
-                            defaultSelectedKeys={['1']}
-                            style={{ lineHeight: '64px' }}
-                        >
-                            <Menu.Item key="1">在线html</Menu.Item>
-                        </Menu>
-                    </Header>
+                    <Header defaultSelectedKeys={['run']}/>
                     <Layout>
                         <Sider width={200} style={{ background: '#fff' }}>
                             <div>
