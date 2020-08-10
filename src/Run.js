@@ -121,7 +121,6 @@ export default class Run extends PureComponent {
         } else if( mode === "css" ){
             this.setState({cssText: newValue});
         }
-        console.log(newValue, mode);
 
     }
 
